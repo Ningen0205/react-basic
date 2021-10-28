@@ -9,6 +9,9 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
+        <p>
+          新・日本一わかりやすいReact入門で環境構築をしました。
+        </p>
         <a
           className="App-link"
           href="https://reactjs.org"
