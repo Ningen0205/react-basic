@@ -270,6 +270,97 @@ const ToggleButton = () => {
 }
 ```
 
-| 1         |   2   | 3   |
-| --------- | :---: | --- |
-| ddddddddd | dddd  |     |
+## ライフサイクル
+
+- コンポーネントが生まれてから破棄されるまでの時間の流れ
+- ライフサイクルメソッドを使用すると、時点に応じた処理ができる
+- class component 時代は以下の3メソッドが頻出だった
+  - componentDidMount()
+  - componentDidUpdate()
+  - componentDidUnmount()
+- Hooks時代ではuseEffectでライフサイクルを表現
+
+### ３種類のライフサイクル
+
+- Mouinting
+  - コンポーネントが配置される期間
+    - 初期化
+    - レンダリング
+    - マウント後の処理
+- Updating
+  - コンポーネントが変更される期間
+    - レンダリング
+    - 更新後の処理
+- Unmounting
+  - コンポーネントが破棄される期間
+    - アンマウント前の処理
+  
+## 副作用(effect)フックを使ってみる
+
+- 関数コンポーネントでは useEffectという副作用フックを使用する
+- 副作用＝レンダリングによって引き起こされる処理
+
+以下の場合はレンダリングの際にCurrent count is... と表示する
+```jsx
+const Counter = () => {
+    const [count, setCount] = useState(0)
+
+    const countUp = () => {
+        setCount(prevState => prevState + 1)
+    }
+
+    const countDown = () => {
+        setCount(prevState => prevState - 1)
+    }
+
+    useEffect(() => {
+        console.log("Current count is...", count)
+    })
+
+    return (
+        <div>
+            <p>現在のカウント数： {count}</p>
+            <button onClick={countUp}>up</button>
+            <button onClick={countDown}>down</button>
+        </div>
+    )
+}
+```
+
+### useEffectの使い方
+
+```jsx
+useEffect(() => {
+    console.log("第2引数を指定しないと毎回実行される")
+})
+
+useEffect(() => {
+    console.log("第2引数に空の配列を指定すると、初回レンダリング時のみ実行される")
+}, [])
+
+useEffect(() => {
+    console.log("第2引数の配列内に変数を指定すると、その変数が変更されるたびに実行される")
+}, [trigger])
+
+useEffect(() => {
+    console.log("第2引数の配列内に複数の変数を指定すると、指定した変数が変更されるたびに実行される")
+}, [trigger1, trigger2])
+
+```
+
+### clarnUpを理解する
+
+```jsx
+
+useEffect(() => {
+    if(open) {
+        console.log("Subscribe database")
+    }
+
+    // 必要なくなった時の処理を 返してあげる。
+    return () => {
+        console.log("UnSubscribe database")
+    }
+})
+
+```
